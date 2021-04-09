@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<Partition xmlns="http://www.fentiss.com/skepart_xml" name ="p_tester" attributes="system boot">
+  <Ports>
+    <SamplingPort name="aircraft_state" direction="source" />
+    <SamplingPort name="taws::alerts" direction="destination" />
+  </Ports>
+</Partition>

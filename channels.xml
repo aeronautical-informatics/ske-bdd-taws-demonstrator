@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<Channels xmlns="http://www.fentiss.com/skechan_xml">
+  <SamplingChannel maxMessageSize="128B">
+    <Source partition="p_tester" port="aircraft_state" />
+    <Destination partition="p_taws" port="aircraft_state" />
+    <Destination partition="p_monitor" port="aircraft_state" />
+  </SamplingChannel>
+  <SamplingChannel maxMessageSize="16B">
+	  <Source partition="p_taws" port="taws::alerts" />
+	  <Destination partition="p_tester" port="taws::alerts" />
+	  <Destination partition="p_monitor" port="taws::alerts" />
+  </SamplingChannel>
+</Channels>
+

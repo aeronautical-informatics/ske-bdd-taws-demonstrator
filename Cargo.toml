@@ -1,0 +1,7 @@
+[workspace]
+
+members = [
+    "p_monitor",
+    "p_taws",
+    "p_tester",
+]

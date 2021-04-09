@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<Schedules xmlns="http://www.fentiss.com/skesched_xml">
+   <Schedule name="sched0" majorFrame="40ms">
+     <Cpu id="0">
+       <PartitionWindow id="0" partition="p_tester" vCpu="0" offset= "0ms"   duration ="10ms" startPoint="true"/>
+       <PartitionWindow id="0" partition="p_monitor" offset= "10ms"   duration ="10ms" startPoint="true"/>
+       <PartitionWindow id="0" partition="p_taws" offset= "20ms"   duration ="10ms" startPoint="true"/>
+       <PartitionWindow id="0" partition="p_monitor" offset= "30ms"   duration ="10ms" startPoint="true"/>
+     </Cpu>
+   </Schedule>
+</Schedules>

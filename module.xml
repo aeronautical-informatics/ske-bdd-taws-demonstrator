@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<Module xmlns="http://www.fentiss.com/ske_xml" name ="openTAWS Test">
+  <Partitions>
+    <Partition image="p_tester.elf" hRef="./p_tester.xml" />
+    <Partition image="p_taws.elf" hRef="./p_taws.xml" />
+    <Partition image="p_monitor.elf" hRef="./p_monitor.xml" />
+  </Partitions>
+  <Schedules hRef="./schedules.xml" />
+  <Channels hRef="./channels.xml" />
+</Module>
