@@ -1,3 +1,4 @@
 *.elf
 **/target
-
+**/result
+**/result-doc

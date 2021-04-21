@@ -1,0 +1,150 @@
+name: main
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+            toolchain: stable
+            components: rustfmt
+            override: true
+      - uses: mbrobbel/rustfmt-check@0.2.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  clippy_check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-clippy-${{ hashFiles('**/Cargo.lock') }}
+      - uses: actions-rs/toolchain@v1
+        with:
+            toolchain: nightly
+            components: clippy
+            override: true
+      - uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all-features
+
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./xng-configuration
+    steps:
+      - name: Checkout main repo
+        uses: actions/checkout@v2
+        with:
+          path: xng-configuration
+      - name: Checkout SKE repo
+        uses: actions/checkout@v2
+        with:
+          repository: aeronautical-informatics/ske
+          ref: refs/tags/v2.0.0
+          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          path: ske
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            xng-configuration/target
+          key: ${{ runner.os }}-cargo-build-${{ hashFiles('**/Cargo.lock') }}
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable 
+          target: x86_64-unknown-linux-gnu
+          override: true
+      - name: Build XNG-Configuration
+        env:
+          SKE_PATH: ${{ github.workspace }}/ske
+        run: |
+          cargo build --verbose
+          make -j
+      - run: mv *.xml *.elf features rtlola ../
+      - uses: actions/upload-artifact@v2
+        with:
+          name: xng-configuration
+          path: |
+            *.xml
+            *.elf
+            features
+            rtlola
+
+  ske-rs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main repo
+        uses: actions/checkout@v2
+        with:
+          repository: aeronautical-informatics/ske-rs
+          ssh-key: ${{ secrets.SSH_PRIVATE_KEY2 }}
+      - name: Checkout SKE repo
+        uses: actions/checkout@v2
+        with:
+          repository: aeronautical-informatics/ske
+          ref: refs/tags/v2.0.0
+          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          path: ske
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-test-${{ hashFiles('**/Cargo.lock') }}
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: x86_64-unknown-linux-gnu
+          override: true
+      - name: Deploy libskeserver.so
+        run: cp ${{ github.workspace }}/ske/bin/libskeserver.so ./
+      - name: Build ske-rs
+        run: |
+          cargo build --release --verbose
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ske-rs
+          path: target/release/ske-rs
+
+  test:
+    needs: [ build, ske-rs ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout SKE repo
+        uses: actions/checkout@v2
+        with:
+          repository: aeronautical-informatics/ske
+          ref: refs/tags/v2.0.0
+          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          path: ske
+      - name: Download xng-configuration
+        uses: actions/download-artifact@v2
+        with:
+          name: xng-configuration
+      - name: Download ske-rs
+        uses: actions/download-artifact@v2
+        with:
+          name: ske-rs
+          path: ./
+      - name: Run XNG-Configuration
+        run: |
+          chmod +x ske-rs *.elf
+          ./ske-rs run 1e3
+
