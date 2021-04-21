@@ -43,9 +43,14 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./xng-configuration
     steps:
       - name: Checkout main repo
         uses: actions/checkout@v2
+        with:
+          path: xng-configuration
       - name: Checkout SKE repo
         uses: actions/checkout@v2
         with:
@@ -58,8 +63,8 @@ jobs:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
-            target
-          key: ${{ runner.os }}-cargo-test-${{ hashFiles('**/Cargo.lock') }}
+            xng-configuration/target
+          key: ${{ runner.os }}-cargo-build-${{ hashFiles('**/Cargo.lock') }}
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable 
@@ -71,6 +76,7 @@ jobs:
         run: |
           cargo build --verbose
           make -j
+      - run: mv *.xml *.elf features rtlola ../
       - uses: actions/upload-artifact@v2
         with:
           name: xng-configuration
@@ -112,7 +118,6 @@ jobs:
       - name: Build ske-rs
         run: |
           cargo build --release --verbose
-          ldd libskeserver.so
       - uses: actions/upload-artifact@v2
         with:
           name: ske-rs
