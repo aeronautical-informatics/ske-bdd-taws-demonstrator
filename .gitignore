@@ -1,3 +1,5 @@
 *.elf
 **/target
-
+flake.lock
+**/result
+**/result-doc
