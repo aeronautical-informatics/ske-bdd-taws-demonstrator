@@ -5,15 +5,15 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1618844365,
-        "narHash": "sha256-Z9t0rr+5OG/ru3jdg3jivfYVU4ydV/nqt8UwIut7uHs=",
-        "owner": "nmattia",
+        "lastModified": 1655042882,
+        "narHash": "sha256-9BX8Fuez5YJlN7cdPO63InoyBy7dm3VlJkkmTt6fS1A=",
+        "owner": "nix-community",
         "repo": "naersk",
-        "rev": "32e3ba39d9d83098b13720a4384bdda191dd0445",
+        "rev": "cddffb5aa211f50c4b8750adbec0bbbdfb26bb9f",
         "type": "github"
       },
       "original": {
-        "owner": "nmattia",
+        "owner": "nix-community",
         "repo": "naersk",
         "type": "github"
       }
@@ -38,12 +38,10 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1619036500,
-        "narHash": "sha256-y5wW/Lgqnz99Qw7+XkK1avpdBAv5hvhc6p8UCy2apt0=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "d7986bb0dd00cdb65c436995acd0d69b8fc27d3f",
-        "type": "github"
+        "lastModified": 0,
+        "narHash": "sha256-TwEeh4r50NdWHFAHQSyjCk2cZxgwUfcCCAJOhPdXB28=",
+        "path": "/nix/store/hyinwqr1byiwwgzdc32yvqi3ih1hssbh-source",
+        "type": "path"
       },
       "original": {
         "id": "nixpkgs",
@@ -52,12 +50,10 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1619036500,
-        "narHash": "sha256-y5wW/Lgqnz99Qw7+XkK1avpdBAv5hvhc6p8UCy2apt0=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "d7986bb0dd00cdb65c436995acd0d69b8fc27d3f",
-        "type": "github"
+        "lastModified": 0,
+        "narHash": "sha256-TwEeh4r50NdWHFAHQSyjCk2cZxgwUfcCCAJOhPdXB28=",
+        "path": "/nix/store/hyinwqr1byiwwgzdc32yvqi3ih1hssbh-source",
+        "type": "path"
       },
       "original": {
         "id": "nixpkgs",
@@ -66,12 +62,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1619033689,
-        "narHash": "sha256-ABoYZ4ftAum8PTw5i5k/9c1S5Cj0goMFqpuOcdNJdGw=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "52b2fec43ba8d39c003627fe5f7fa59195bd40f2",
-        "type": "github"
+        "lastModified": 1651007983,
+        "narHash": "sha256-GNay7yDPtLcRcKCNHldug85AhAvBpTtPEJWSSDYBw8U=",
+        "path": "/nix/store/yyddvwq452qsvpgb104mllpq0hkkmsqx-source",
+        "rev": "e10da1c7f542515b609f8dfbcf788f3d85b14936",
+        "type": "path"
       },
       "original": {
         "id": "nixpkgs",
@@ -135,11 +130,11 @@
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1619034515,
-        "narHash": "sha256-zIu4dsc5iNKPlHKR/nFMuwVqciGEUqpV26Mx62a+ZpA=",
+        "lastModified": 1652107094,
+        "narHash": "sha256-i8nHfSjV0ZozPWNp4qZ8AhjKmaGxoM/+4gNWA/BjrkY=",
         "ref": "main",
-        "rev": "4ce616a30f96e25469ee371327b0ecb1c713d83e",
-        "revCount": 2,
+        "rev": "a60be956d9714945351c33c60ccd293325c49488",
+        "revCount": 4,
         "type": "git",
         "url": "ssh://git@github.com/aeronautical-informatics/ske"
       },
@@ -157,11 +152,11 @@
         "utils": "utils_3"
       },
       "locked": {
-        "lastModified": 1619034645,
-        "narHash": "sha256-T2xU5pMdbR8Dlth5jVnNdXd0W4JY+OF07QGW05cfTWw=",
+        "lastModified": 1628270303,
+        "narHash": "sha256-jxnt0i0h79gdpNfrvZL/x9JLiL92Ws5+bMG7omBqqO4=",
         "owner": "aeronautical-informatics",
         "repo": "ske-rs",
-        "rev": "ca5c83f04ad162b5d4f4825e9e9debe3ff77cdc8",
+        "rev": "27f3e28a86e137603a4c605d4cd24af7dd387e95",
         "type": "github"
       },
       "original": {
@@ -192,11 +187,11 @@
     },
     "utils": {
       "locked": {
-        "lastModified": 1618868421,
-        "narHash": "sha256-vyoJhLV6cJ8/tWz+l9HZLIkb9Rd9esE7p+0RL6zDR6Y=",
+        "lastModified": 1649676176,
+        "narHash": "sha256-OWKJratjt2RW151VUlJPRALb7OU2S5s+f0vLj4o1bHM=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "eed214942bcfb3a8cc09eb3b28ca7d7221e44a94",
+        "rev": "a4b154ebbdc88c8498a5c7b01589addc9e9cb678",
         "type": "github"
       },
       "original": {
@@ -237,11 +232,11 @@
     },
     "utils_4": {
       "locked": {
-        "lastModified": 1618868421,
-        "narHash": "sha256-vyoJhLV6cJ8/tWz+l9HZLIkb9Rd9esE7p+0RL6zDR6Y=",
+        "lastModified": 1656065134,
+        "narHash": "sha256-oc6E6ByIw3oJaIyc67maaFcnjYOz1mMcOtHxbEf9NwQ=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "eed214942bcfb3a8cc09eb3b28ca7d7221e44a94",
+        "rev": "bee6a7250dd1b01844a2de7e02e4df7d8a0a206c",
         "type": "github"
       },
       "original": {

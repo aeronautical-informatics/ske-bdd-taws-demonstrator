@@ -167,7 +167,7 @@ fn steps() -> Steps<MyWorld> {
                     // send data to other partition
                     taws_input.aircraft_state = frame.clone();
                     taws_input.send(&world.lock.1).unwrap();
-                    xng_rs::vcpu::finish_slot();
+                    xng_rs::vcpu::wait_until_next_schedule_slot();
                     let mut buf = [0u8; ALERT_STATE_SIZE];
                     let (recieved_buf, _) = world.lock.0.recv(&mut buf).unwrap().unwrap();
                     let alert_state: AlertState = postcard::from_bytes(recieved_buf).unwrap();
@@ -202,7 +202,7 @@ fn steps() -> Steps<MyWorld> {
                     // send data to other partition
                     taws_input.aircraft_state = frame.clone();
                     taws_input.send(&world.lock.1).unwrap();
-                    xng_rs::vcpu::finish_slot();
+                    xng_rs::vcpu::wait_until_next_schedule_slot();
                     let mut buf = [0u8; ALERT_STATE_SIZE];
                     let (recieved_buf, _) = world.lock.0.recv(&mut buf).unwrap().unwrap();
                     let alert_state: AlertState = postcard::from_bytes(recieved_buf).unwrap();

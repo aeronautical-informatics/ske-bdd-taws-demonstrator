@@ -1,29 +1,26 @@
-use std::collections::HashMap;
-use std::io::{stdout, Write};
+use std::io::stdout;
 
+use rtlola_interpreter::monitor::Incremental;
+use rtlola_interpreter::time::RelativeFloat;
+use rtlola_interpreter::ConfigBuilder;
 use xng_rs::prelude::*;
 
 use opentaws::prelude::*;
 use ordered_float::NotNan;
 use p_taws::*;
-use rtlola_frontend::FrontendConfig;
-use rtlola_interpreter::{Config, EvalConfig, TimeFormat, TimeRepresentation, Value};
+use rtlola_interpreter::{Monitor, Value};
 
-const SPEC: &'static str = include_str!("../../rtlola/spec.lola");
+const SPEC: &str = include_str!("../../rtlola/spec.lola");
 
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn PartitionMain() -> isize {
-    let frontend_config = FrontendConfig::default();
-    let ir = rtlola_frontend::parse("rtlola/spec.lola", SPEC, frontend_config).unwrap();
-    let trigger_map: HashMap<_, _> = ir
-        .triggers
-        .iter()
-        .map(|tr| (tr.reference.out_ix(), tr.message.clone()))
-        .collect();
-
-    let eval_config = EvalConfig::api(TimeRepresentation::Relative(TimeFormat::FloatSecs));
-    let mut monitor = Config::new_api(eval_config, ir).into_monitor().unwrap();
+    let mut monitor: Monitor<_, _, Incremental, _> = ConfigBuilder::api()
+        .spec_str(SPEC)
+        .input_time::<RelativeFloat>()
+        .event_input::<Vec<Value>>()
+        .with_verdict::<Incremental>()
+        .monitor();
 
     let aircraft_state_port = port::SamplingReceiver::<AIRCRAFT_STATE_SIZE>::new(
         cstr!("aircraft_state"),
@@ -46,7 +43,7 @@ pub extern "C" fn PartitionMain() -> isize {
         let mut events = vec![Value::None; 2];
 
         if let Some((buf, _)) = aircraft_state_port.recv(&mut buf).unwrap() {
-            let _taws_input: TawsInput = postcard::from_bytes(&buf).unwrap(); // TOOD handle error
+            let _taws_input: TawsInput = postcard::from_bytes(buf).unwrap(); // TOOD handle error
             let maybe_ts = aircraft_state_port.status().unwrap().last_message_ts;
 
             if maybe_ts != last_input {
@@ -58,7 +55,7 @@ pub extern "C" fn PartitionMain() -> isize {
         }
 
         if let Some((buf, _)) = taws_alert_port.recv(&mut buf).unwrap() {
-            let _taws_alerts: AlertState = postcard::from_bytes(&buf).unwrap(); // TOOD handle error
+            let _taws_alerts: AlertState = postcard::from_bytes(buf).unwrap(); // TOOD handle error
             let maybe_ts = taws_alert_port.status().unwrap().last_message_ts;
 
             if maybe_ts != last_output {
@@ -69,19 +66,22 @@ pub extern "C" fn PartitionMain() -> isize {
             }
         }
 
+        // debug
+        use std::fs::File;
+        use std::io::prelude::*;
+
+        let mut file = File::create("foo.txt").unwrap();
+
         let update = monitor.accept_event(events, time_stamp);
-        for trigger_msg in update
-            .event
-            .iter()
-            .filter(|(_, v)| *v == Value::Bool(true))
-            .map(|(k, _)| trigger_map.get(k).unwrap())
-        {
-            println!("\nRTLola trigger: {}\n", trigger_msg);
+        for trigger_msg in update.event.iter() {
+            write!(file, "\nRTLola trigger: {:#?}\n", trigger_msg).unwrap();
+            println!("\nRTLola trigger: {:#?}\n", trigger_msg);
+
             stdout().flush().unwrap();
         }
 
         // TODO this is ugly, but necessary?
-        xng_rs::vcpu::finish_slot();
+        xng_rs::vcpu::wait_until_next_schedule_slot();
     }
 }
 
@@ -91,10 +91,11 @@ mod test {
 
     #[test]
     fn parse_provided_spec() {
-        let frontend_config = FrontendConfig::default();
-        let ir = rtlola_frontend::parse("rtlola/spec.lola", SPEC, frontend_config);
-        if let Err(e) = ir {
-            panic!("{}", e);
-        }
+        let _monitor: Monitor<_, _, Incremental, _> = ConfigBuilder::api()
+            .spec_str(SPEC)
+            .input_time::<RelativeFloat>()
+            .event_input::<Vec<Value>>()
+            .with_verdict::<Incremental>()
+            .monitor();
     }
 }

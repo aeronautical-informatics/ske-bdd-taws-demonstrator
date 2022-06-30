@@ -1,22 +1,18 @@
 // timestamp of new aircraft state
 input new_aircraft_state: Float64
 
-
 // timestamp of a new alert state
 input new_alert_state: Float64
 
 
 // true if we received less than 25 aircraft states in the last second
 // this means we violated the rule "New Aicraft States occur on at least 25 Hz"
-output check_aircraft_state_rate @ 25Hz := new_aircraft_state.aggregate(over_exactly: 1s, using: count).defaults(to: 0) < 25
-
+output check_aircraft_state_rate @ 25Hz := new_aircraft_state.aggregate(over_exactly: 1s, using: count).defaults(to:0) < 25
 
 // the delay in microseconds which the taws took to generate an alertstate
 output check_taws_alert_delay @ new_alert_state := new_alert_state - new_aircraft_state.hold(or: 0.0) 
 
+
 trigger check_aircraft_state_rate "Receival of new aircraft states infrequent"
-
-
 trigger check_taws_alert_delay >= 2.0 "taws did not emit alert state within 2 seconds after aircraft state"
-
 trigger check_taws_alert_delay < 2.0 "TAWS is responsive"

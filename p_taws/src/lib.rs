@@ -22,7 +22,7 @@ impl TawsInput {
         let written_buf =
             postcard::to_slice(&self, &mut buf).map_err(|_| XngError::InvalidParam)?;
         tx.send(written_buf)?;
-        xng_rs::vcpu::finish_slot();
+        xng_rs::vcpu::wait_until_next_schedule_slot();
         Ok(())
     }
 
@@ -68,7 +68,7 @@ pub fn entry() -> Result<(), XngError> {
     loop {
         // check if we can process an aircraft state
         if let Some((buf, _)) = aircraft_state_port.recv(&mut buf)? {
-            let taws_input: TawsInput = postcard::from_bytes(&buf).unwrap(); // TOOD handle error
+            let taws_input: TawsInput = postcard::from_bytes(buf).unwrap(); // TOOD handle error
 
             for action in &taws_input.arm {
                 match action {
@@ -94,7 +94,7 @@ pub fn entry() -> Result<(), XngError> {
         }
 
         // yield back to the scheduler
-        xng_rs::vcpu::finish_slot();
+        xng_rs::vcpu::wait_until_next_schedule_slot();
     }
 }
 
